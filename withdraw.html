@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Withdraw Feed</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      color: #fff;
+    }
+    .card {
+      background: #111;
+      border-radius: 15px;
+      padding: 20px;
+      width: 360px;
+      box-shadow: 0 0 15px rgba(0,255,100,0.3);
+    }
+    h3 {
+      text-align: center;
+      color: #00ff66;
+      margin: 0 0 10px;
+    }
+    .live {
+      text-align: center;
+      margin: 5px 0 15px;
+    }
+    .live span {
+      background: red;
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+    .item {
+      background: #222;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .name {
+      font-weight: bold;
+    }
+    .amount {
+      color: #00ff66;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 12px;
+      color: #aaa;
+    }
+    .success {
+      color: #00ff66;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h3>💰 รายการถอนล่าสุด 💰</h3>
+    <div class="live"><span>LIVE</span></div>
+    <div id="feed"></div>
+  </div>
+
+  <script>
+    const names = ["สมชาย", "ประกาศศรี", "ศศิธร", "ประภา", "วิชัย", "อรทัย", "สมปอง", "สุรีย์พร", "อดิศักดิ์", "พรทิพย์"];
+    
+    function randomPhone() {
+      let start = Math.floor(80 + Math.random() * 19);
+      return start + "-XXX-" + Math.floor(100 + Math.random() * 900);
+    }
+
+    function randomAmount() {
+      let num = Math.floor(5000 + Math.random() * 90000);
+      return num.toLocaleString("th-TH") + " ฿";
+    }
+
+    function getTime() {
+      let now = new Date();
+      return now.toLocaleDateString("th-TH", { day:"2-digit", month:"short", year:"numeric"}) + 
+             " " + now.toLocaleTimeString("th-TH");
+    }
+
+    function addFeedItem() {
+      let name = names[Math.floor(Math.random() * names.length)];
+      let phone = randomPhone();
+      let amount = randomAmount();
+      let time = getTime();
+
+      let feed = document.getElementById("feed");
+      let item = document.createElement("div");
+      item.className = "item";
+      item.innerHTML = `
+        <div class="item-header">
+          <div>
+            <div class="name">${name}</div>
+            <small>${phone}</small>
+          </div>
+          <div class="amount">${amount}</div>
+        </div>
+        <div class="item-footer">
+          <span>${time}</span>
+          <span class="success">✔ โอนสำเร็จ</span>
+        </div>
+      `;
+      feed.prepend(item); // เพิ่มบนสุด
+      if(feed.children.length > 5) feed.removeChild(feed.lastChild); // เก็บไว้สูงสุด 5 แถว
+    }
+
+    // สร้างตอนโหลด
+    for(let i=0; i<3; i++) addFeedItem();
+    // สุ่มเพิ่มทุก 5 วิ
+    setInterval(addFeedItem, 5000);
+  </script>
+</body>
+</html>
